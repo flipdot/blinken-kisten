@@ -6,5 +6,15 @@ The "Adventskranz" consists of two led tripes driven by an arduino each:
 
 ![photograph of the "Adventskrantz"](TODO://take/picture/and/insert/it/here)
 
+## candle layout
+1. candle:
+  - flame: (length - 62) to (length - 53)
+  - wax: (length - 7) to (length - 52)
+
+
+2. candle:
+  - flame: (length - 68) to (length - 77)
+  - wax: (length - 78) to (length - 126)
+
 ## hack it
 The code can be build and uploaded using [platformio](http://platformio.org/).
