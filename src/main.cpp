@@ -23,16 +23,16 @@ void loop() {
 
 
     for(uint16_t i=0; i < strip.numPixels(); i++) {
-        if(i < 240-53 && i > 240 - 62) {
+        if(i <= 240-53 && i >= 240 - 62) {
           // first candle flame
           strip.setPixelColor(i, flame[0]);
-        } else if(i < 240-2 && i > 240 - 52) {
+        } else if(i <= 240-2 && i >= 240 - 52) {
           // first candle wax
           strip.setPixelColor(i, red);
-        } else if(i < 240-68 && i > 240 - 77) {
+        } else if(i <= 240-68 && i >= 240 - 77) {
           // second candle flame
           strip.setPixelColor(i, flame[1]);
-        } else if(i < 240-78 && i > 240 - 126) {
+        } else if(i <= 240-78 && i > 240 - 126) {
           // second candle wax
           strip.setPixelColor(i, red);
         } else {
