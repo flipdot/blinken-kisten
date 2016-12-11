@@ -30,7 +30,13 @@ void loop() {
 
 
     for(uint16_t i=0; i < strip.numPixels(); i++) {
-        if(i <= 240-53 && i >= 240 - 62) {
+        if(i < 115){
+          if (random(0, 200) == 42){
+            strip.setPixelColor(i, flash);
+          }else{
+            strip.setPixelColor(i, green);
+          }
+        } else if(i <= 240-53 && i >= 240 - 62) {
           // first candle flame
           strip.setPixelColor(i, flame[0]);
         } else if(i <= 240-2 && i >= 240 - 52) {
@@ -51,7 +57,11 @@ void loop() {
           // fourth candle wax
           strip.setPixelColor(i, red);
         } else if (i > 266) {
-          strip.setPixelColor(i, green2);
+          if (random(0, 100) == 42){
+            strip.setPixelColor(i, flash);
+          } else {
+            strip.setPixelColor(i, green2);
+          }
         } else {
           // the rest
           strip.setPixelColor(i, off);
