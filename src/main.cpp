@@ -36,24 +36,28 @@ void loop() {
             } else {
                 strip.setPixelColor(i, green);
             }
-        } else if (i <= 240-53 && i >= 240 - 62) {
+        } else if (i <= 240-53 && i >= 240-62) {
             // first candle flame
             strip.setPixelColor(i, flame[0]);
-        } else if (i <= 240-2 && i >= 240 - 52) {
+        } else if (i <= 240-2 && i >= 240-52) {
             // first candle wax
             strip.setPixelColor(i, red);
-        } else if (i <= 240-68 && i >= 240 - 77) {
+        } else if (i <= 240-68 && i >= 240-77) {
             // second candle flame
             strip.setPixelColor(i, flame[1]);
-        } else if (i <= 240-78 && i > 240 - 126) {
+        } else if (i <= 240-78 && i > 240-126) {
             // second candle wax
             strip.setPixelColor(i, red);
         } else if (i >= 241 && i <= 250) {
             // third candle wax
             strip.setPixelColor(i, red);
         } else if (i >= 251 && i <= 252) {
+            // third candle flame
             strip.setPixelColor(i, flame[2]);
-        } else if (i >= 254 && i <= 266) {
+        } else if (i >= 254 && i <= 255) {
+            // fourth candle flame
+            strip.setPixelColor(i, flame[3]);
+        } else if (i >= 256 && i <= 266) {
             // fourth candle wax
             strip.setPixelColor(i, red);
         } else if (i > 266) {
