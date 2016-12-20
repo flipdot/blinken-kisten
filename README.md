@@ -4,7 +4,7 @@ The "Adventskranz" consists of two led tripes driven by an arduino each:
 * one ws2812b strip with 240 leds driven by an Arduino nano with an atmega168
 * one ws2811 strip with 50 leds segments driven by an Arduino nano with an atmega328
 
-![photograph of the "Adventskrantz"](TODO://take/picture/and/insert/it/here)
+![Adventskranz photo](assets/photo.jpg)
 
 ## candle layout
 1. candle:
