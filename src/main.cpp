@@ -4,8 +4,25 @@
 
 #define NUM_LEDS 280
 #define NUM_KASTEN 6
-#define DATA_PIN 3
-#define PIN 3
+#define DATA_PIN D3
+#define BAUDRATE 115200
+
+#define PIN D3
+
+#include <ESP8266WiFi.h>
+
+const char* ssid     = "security-by-obscurity";
+const char* password = "LOL DAS SCHREIB ICH DOCH NICHT AUF GITHUB";
+
+const char prefix[] = {0x66, 0x6c, 0x70, 0x64, 0x74};
+char buffer[sizeof(prefix)]; // buffer for receiving prefix data; needs to be at least 3 chars
+
+WiFiServer server(42);
+int state;
+int currentLED;
+#define STATE_WAITING   1    // - Waiting for prefix
+#define STATE_DO_PREFIX 2    // - Processing prefix
+#define STATE_DO_DATA   3    // - Handling incoming LED colors
 
 // Adafruit_NeoPixel strip = Adafruit_NeoPixel(280, PIN, NEO_GRB + NEO_KHZ800);
 CHSV hsvs[NUM_LEDS];
@@ -83,19 +100,84 @@ void white_random_kasten() {
     kasten_sat[k] = 0;
 }
 
+void idle_animation() {
+    animation_kasten_hue();
+    if (random(0, 256) > 253) {
+        white_random_kasten();
+    }
+    FastLED.show();
+    delay(100);
+}
+
 void setup() {
     FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+    Serial.begin(BAUDRATE);
+    delay(10);
+
+    // We start by connecting to a WiFi network
+
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+
+    /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
+       would try to act as both a client and an access-point and could cause
+       network-issues with your other WiFi-devices on your WiFi-network. */
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    server.begin();
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+    state = STATE_WAITING;
 }
 
 void loop() {
-    while (true) {
-        animation_kasten_hue();
+    switch(state) {
+        case STATE_WAITING:
+            if (Serial.available() > 0) {
+                if (Serial.read() == prefix[0]) {
+                    state = STATE_DO_PREFIX;
+                }
+            }
+            //idle_animation();
+            break;
+        case STATE_DO_PREFIX:
+            if (Serial.available() > sizeof(prefix) - 2) {
+                Serial.readBytes(buffer, sizeof(prefix) - 1);
 
-        if (random(0, 256) > 253) {
-            white_random_kasten();
-        }
-
-        FastLED.show();
-        delay(100);
+                for (int i=0; i < sizeof(prefix) - 1; i++) {
+                    if (buffer[i] == prefix[i+1]) {
+                        state = STATE_DO_DATA;
+                        currentLED = 0;
+                    } else {
+                        // something went wront, go back to waiting
+                        state = STATE_WAITING;
+                        break;
+                    }
+                }
+            }
+            break;
+        case STATE_DO_DATA:
+            if (Serial.available() > 2) {
+                Serial.readBytes(buffer, 3);
+                leds[currentLED] = CRGB(buffer[0], buffer[1], buffer[2]);
+                currentLED++;
+            }
+            if (currentLED > NUM_LEDS) {
+                FastLED.show();
+                delay(10);
+                state = STATE_WAITING;
+                currentLED = 0;
+            }
+            break;
     }
 }
